@@ -6,9 +6,17 @@ This is a really simple plugin for sublime to format vue file(mean .vue file)
 [js-beautify](https://github.com/beautify-web/js-beautify)  
 [standard-format](https://github.com/maxogden/standard-format)
 
-## Usage
+## Installation
+
+Install standard-format
+
+```
+$ npm install -g standard-format
+```
 
 open `Package Control` -> `Install Package` -> `VueFormat`
+
+## Usage
 
 open __.vue__ file, use `command + shift + h`
 
