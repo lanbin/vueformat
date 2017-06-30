@@ -12,15 +12,19 @@
 
 <script>
 import Vue from 'vue'
+const two = 'two'
+console.log(Vue)
 
 export default {
   name: 'test',
   data() {
     return {
       one: 'one',
-      two: 'two'
 
-    }
+
+
+
+    two}
   },
   methods: {
     going() {
@@ -34,9 +38,9 @@ export default {
 <style lang="less">
 #test {
   position: relative;
-  left: 0;
   right: 0;
-  background-color: red;
+  left: 0;
+        background-color: red;
   p {
     background: white;
   }

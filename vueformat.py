@@ -14,7 +14,7 @@ class VueformatCommand(sublime_plugin.TextCommand):
 
 
 	# 格式化html
-	def templateFormat(self, edit):		
+	def templateFormat(self, edit):
 		# 获取起始和结束
 		templateStart = self.view.find(r"<template>", 0)
 		templateEnd = self.view.find(r"</template>", 0)
@@ -24,7 +24,6 @@ class VueformatCommand(sublime_plugin.TextCommand):
 		# 获取需要格式化的部分
 		templateRegion = sublime.Region(templateStart.begin(), templateEnd.end())
 		temp_originalBuffer = self.view.substr(templateRegion)
-
 		if len(temp_originalBuffer) > 0:
 			# 生成一个临时文件
 			temp_file_path, temp_buff = self.save_buffer_to_temp_file(templateRegion, 'html')
@@ -50,7 +49,7 @@ class VueformatCommand(sublime_plugin.TextCommand):
 			formatStr = self.get_temp_file_format(temp_file_path, temp_buff, 'css')
 			decodedStr = formatStr.decode("utf-8")
 			os.remove(temp_file_path)
-			self.view.replace(edit, styleRegion, '\n' + decodedStr[:-1])
+			self.view.replace(edit, styleRegion, "\n" + decodedStr[:-1])
 
 	def scriptFormat(self, edit):
 		scriptStart = self.view.find(r"<script(.*)>", 0)
@@ -63,12 +62,11 @@ class VueformatCommand(sublime_plugin.TextCommand):
 		if len(script_originalBuffer) > 0:
 			try:
 				temp_file_path, temp_buff = self.save_buffer_to_temp_file(scriptRegion, 'js')
-				cmd = ['standard-format', temp_file_path]
-				formatStr = Util.get_output(cmd)
+				formatStr = self.get_temp_file_format(temp_file_path, temp_buff, 'js')
 				decodedStr = formatStr.decode("utf-8")
-				os.remove(temp_file_path)
+				# os.remove(temp_file_path)
 				self.view.replace(edit, scriptRegion, '\n' + decodedStr)
-			except:
+			except Exception as e:
 				sublime.error_message('You Javascript Code is Shit!')
 
 	def save_buffer_to_temp_file(self, region, selection_type):
@@ -87,7 +85,7 @@ class VueformatCommand(sublime_plugin.TextCommand):
 		# result file
 		file_path = temp_file_path + '.__script__'
 		# construct command
-		cmd = [node_path, script_path, temp_file_path, file_path or "?", selection_type, USER_FOLDER]
+		cmd = [node_path, script_path, temp_file_path, file_path or "?", selection_type]
 
 		# exec command
 		output = Util.get_output(cmd)
@@ -125,5 +123,4 @@ class Util:
 		else:
 			# Handle all OS in Python 3.
 			run = '"' + '" "'.join(cmd) + '"'
-			print(run)
-			return subprocess.check_output(run, stderr=subprocess.STDOUT, shell=True, env=os.environ)
+			return subprocess.check_output(cmd, stderr=subprocess.STDOUT, env=os.environ)

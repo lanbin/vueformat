@@ -10,6 +10,7 @@ var css_beautify = require("js-beautify")
   .css;
 var html_beautify = require("js-beautify")
   .html;
+var standard = require("standard")
 
 fs.existsSync = fs.existsSync || path.existsSync;
 path.sep = path.sep || "/";
@@ -17,15 +18,25 @@ path.sep = path.sep || "/";
 var tempPath = process.argv[2] || "";
 var filePath = process.argv[3] || "";
 var formatType = process.argv[4] || "";
-var userFolder = process.argv[5] || "";
 var pluginFolder = path.dirname(__dirname);
 var sourceFolder = path.dirname(filePath);
 var options = { html: {}, css: {}, js: {} };
 
+function jsFormat(data) {
+  data =  data.replace(/\/\/<!--(.*)-->/g, '')
+  var result = standard.lintTextSync(data, {
+    fix:true
+  })
+  if(result.errorCount > 0) {
+    return "//<!-- Your code has error: " + result.errorCount + "-->\n" + data
+  }
+  return (result && result.results && result.results[0].output) || data
+}
+
 var formatFun = {
   'html': html_beautify,
   'css': css_beautify,
-  'js': js_beautify
+  'js': jsFormat
 }
 
 if (!formatType) {
@@ -40,25 +51,6 @@ if (fs.existsSync(jsbeautifyrcPath = pluginFolder + path.sep + ".jsbeautifyrc"))
 }
 var sourceFolderParts = path.resolve(sourceFolder)
   .split(path.sep);
-
-var pathsToLook = sourceFolderParts.map(function(value, key) {
-  return sourceFolderParts.slice(0, key + 1)
-    .join(path.sep);
-});
-
-// Start with the current directory first, then with the user's home folder, and
-// end with the user's personal sublime settings folder.
-pathsToLook.reverse();
-pathsToLook.push(getUserHome());
-pathsToLook.push(userFolder);
-
-pathsToLook.filter(Boolean)
-  .some(function(pathToLook) {
-    if (fs.existsSync(jsbeautifyrcPath = path.join(pathToLook, ".jsbeautifyrc"))) {
-      setOptions(jsbeautifyrcPath, options);
-      return true;
-    }
-  });
 
 fs.readFile(tempPath, "utf8", function(err, data) {
   if (err) {
