@@ -23,14 +23,25 @@ var sourceFolder = path.dirname(filePath);
 var options = { html: {}, css: {}, js: {} };
 
 function jsFormat(data) {
-  data =  data.replace(/\/\/<!--(.*)-->/g, '')
+  data = data.replace(/\/\*[\s\S]*?\*\//g, '')
+  .replace(/^(\s*)/, '')
+  .replace(/(\s*)$/, '')
+
   var result = standard.lintTextSync(data, {
     fix:true
   })
+
+  var mgs = []
+  result.results[0].messages.map((item, index) => {
+    mgs.push((index + 1) + ": " + item.message)
+  })
+
+  var afterFormat = (result && result.results && result.results[0].output) || data
+
   if(result.errorCount > 0) {
-    return "//<!-- Your code has error: " + result.errorCount + "-->\n" + data
+    return "/* \n Your code has error: " + result.errorCount + "\n" + mgs.join("\n") + " */\n\n" + afterFormat
   }
-  return (result && result.results && result.results[0].output) || data
+  return afterFormat
 }
 
 var formatFun = {
