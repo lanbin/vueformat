@@ -33,6 +33,7 @@ class VueformatCommand(sublime_plugin.TextCommand):
 			decodedStr = formatStr.decode("utf-8")
 			# 删除临时文件
 			os.remove(temp_file_path)
+			print('Html part fomatted!')
 			# 替换
 			self.view.replace(edit, templateRegion, decodedStr[:-1])
 
@@ -49,6 +50,7 @@ class VueformatCommand(sublime_plugin.TextCommand):
 			formatStr = self.get_temp_file_format(temp_file_path, temp_buff, 'css')
 			decodedStr = formatStr.decode("utf-8")
 			os.remove(temp_file_path)
+			print('Style part fomatted!')
 			self.view.replace(edit, styleRegion, "\n" + decodedStr[:-1])
 
 	def scriptFormat(self, edit):
@@ -64,10 +66,10 @@ class VueformatCommand(sublime_plugin.TextCommand):
 				temp_file_path, temp_buff = self.save_buffer_to_temp_file(scriptRegion, 'js')
 				formatStr = self.get_temp_file_format(temp_file_path, temp_buff, 'js')
 				decodedStr = formatStr.decode("utf-8")
-				# os.remove(temp_file_path)
 				self.view.replace(edit, scriptRegion, '\n' + decodedStr)
+				print('Javascript part fomatted!')
 			except Exception as e:
-				sublime.error_message('You Javascript Code is Shit!')
+				sublime.error_message('Your Javascript Code is Shit!')
 
 	def save_buffer_to_temp_file(self, region, selection_type):
 		buffer_text = self.view.substr(region)

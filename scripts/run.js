@@ -33,7 +33,7 @@ function jsFormat(data) {
 
   var mgs = []
   result.results[0].messages.map((item, index) => {
-    mgs.push((index + 1) + ": " + item.message)
+    mgs.push((index + 1) + ['. line: ' + item.line , ',col: ' + item.column, '. ' +item.message].join(''))
   })
 
   var afterFormat = (result && result.results && result.results[0].output) || data
@@ -41,6 +41,7 @@ function jsFormat(data) {
   if(result.errorCount > 0) {
     return "/* \n Your code has error: " + result.errorCount + "\n" + mgs.join("\n") + " */\n\n" + afterFormat
   }
+  // 最后是一个换行
   return afterFormat
 }
 
