@@ -66,7 +66,7 @@ class VueformatCommand(sublime_plugin.TextCommand):
 				temp_file_path, temp_buff = self.save_buffer_to_temp_file(scriptRegion, 'js')
 				formatStr = self.get_temp_file_format(temp_file_path, temp_buff, 'js')
 				decodedStr = formatStr.decode("utf-8")
-				self.view.replace(edit, scriptRegion, '\n' + decodedStr)
+				self.view.replace(edit, scriptRegion, '\n' + decodedStr[:-1])
 				print('Javascript part fomatted!')
 			except Exception as e:
 				sublime.error_message('Your Javascript Code is Shit!')
