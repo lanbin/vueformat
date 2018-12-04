@@ -23,7 +23,7 @@ var sourceFolder = path.dirname(filePath);
 var options = { html: {}, css: {}, js: {} };
 
 function jsFormat(data) {
-  data = data.replace(/\/\*[\s\S]*?\*\//g, '')
+  data = data.replace(/\/\* --[\s\S]*? -- \*\//g, '')
   .replace(/^(\s*)/, '')
   .replace(/(\s*)$/, '')
 
@@ -39,7 +39,7 @@ function jsFormat(data) {
   var afterFormat = (result && result.results && result.results[0].output) || data
 
   if(result.errorCount > 0) {
-    return "/* \n Your code has error: " + result.errorCount + "\n" + mgs.join("\n") + " */\n\n" + afterFormat
+    return "/* -- \n Your code has error: " + result.errorCount + "\n" + mgs.join("\n") + " -- */\n\n" + afterFormat
   }
   // 最后是一个换行
   return afterFormat

@@ -19,7 +19,7 @@ class VueformatCommand(sublime_plugin.TextCommand):
 		templateStart = self.view.find(r"<template>", 0)
 		templateEnd = self.view.find_all(r"</template>")
 		# 解决vue中多个template嵌套的问题
-		templateEnd = templateEnd[-1]
+		templateEnd = templateEnd[0] if len(templateEnd) == 1 else templateEnd[-1]
 		if templateStart.begin() < 0:
 			return
 
